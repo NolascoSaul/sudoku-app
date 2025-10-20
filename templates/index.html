@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body
+    class="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 p-4 overflow-hidden">
+    <div class="w-full max-w-2xl flex flex-col items-center gap-3">
+        <header class="text-center space-y-2">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Sudoku</h1>
+            <div class="flex items-center justify-center gap-8 text-sm text-gray-600">
+                <div class="flex items-center gap-2">
+                    <span>Borrados:</span>
+                    <span id="erases" class="font-mono font-semibold text-base">0/3</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="relative">
+            <div id="sudoku-board"
+                class="grid grid-cols-9 gap-0 bg-white shadow-lg border border-gray-800 border-[3px]">
+                {% for i in range(0, 9) %}
+                {% for j in range(0, 9) %}
+                {% set val = board[i][j] %}
+                <button type="button" id="{{ i }}-{{ j }}" data-row="{{ i }}" data-col="{{ j }}"
+                    data-fixed="{{ '1' if fixed[i][j] else '0' }}"
+                    class="w-10 h-10 md:w-14 md:h-14 border 
+                      {% if (i + 1) % 3 == 0 %} border-b-[3px] {% endif %}
+                      {% if (j + 1) % 3 == 0 %} border-r-[3px] {% endif %}
+                      {% if fixed[i][j] %} bg-gray-200 cursor-default {% else %} hover:bg-gray-300 cursor-pointer {% endif %}">
+                    {{ board[i][j] if board[i][j] != 0 else "" }}
+                </button>
+
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </main>
+
+        <div class="flex flex-col gap-4 w-full max-w-md mt-4">
+            <div class="grid grid-cols-9 gap-1.5">
+                <script>
+                    for (let i = 1; i <= 9; i++) {
+                        document.write(
+                            `<button class="border py-2 rounded hover:bg-gray-300" onclick="insertNumber(${i})">${i}</button>`
+                        )
+                    }
+                </script>
+            </div>
+
+            <div class="flex gap-3 mt-2">
+                <button type="button" class="flex-1 gap-2 border py-2 rounded hover:bg-gray-300" onclick="eraseCell()">
+                    Borrar
+                </button>
+                <button type="reset" class="flex-1 gap-2 border py-2 rounded hover:bg-gray-300" onclick="resetGame()">
+                    Reiniciar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
