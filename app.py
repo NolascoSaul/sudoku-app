@@ -20,7 +20,7 @@ def home():
         las celdas fijas y el número de borrados utilizados.
     """
     global current_board, erases_used
-    fixed_cells = [[cell != 0 for cell in row] for row in current_board]
+    fixed_cells = [[cell != 0 for cell in row] for row in current_board] # Celdas iniciales
     return render_template("index.html", board=current_board, fixed=fixed_cells, erases=erases_used, max_erases=MAX_ERASES)
 
 @app.route("/insert", methods=["POST"])

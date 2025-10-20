@@ -29,7 +29,7 @@ function updateCellStyles() {
     if (btn.dataset.fixed === "1") {
       btn.classList.add("bg-gray-200", "cursor-default");
       btn.classList.remove(
-        "hover:bg-gray-200",
+        "hover:bg-gray-300",
         "cursor-pointer",
         "bg-gray-400"
       );
@@ -39,11 +39,11 @@ function updateCellStyles() {
     // Celda seleccionada
     if (selectedCell && btn.id === `${selectedCell.row}-${selectedCell.col}`) {
       btn.classList.add("bg-gray-400");
-      btn.classList.remove("hover:bg-gray-200");
+      btn.classList.remove("hover:bg-gray-300");
     } else {
       // Celdas no seleccionadas: hover activo
       btn.classList.remove("bg-gray-400");
-      btn.classList.add("hover:bg-gray-200", "cursor-pointer");
+      btn.classList.add("hover:bg-gray-300", "cursor-pointer");
     }
   });
 }
@@ -143,17 +143,12 @@ async function resetGame() {
   }
 
   const data = await res.json();
-  selectedCell = null; // quitar selección
-  updateBoardVisual(data.board, data.fixed); // pasar celdas fijas
-  updateCellStyles(); // refrescar hover correctamente
+  selectedCell = null;
+  updateBoardVisual(data.board, data.fixed);
+  updateCellStyles();
 
   const er = document.getElementById("erases");
   if (er && data.erases !== undefined) er.innerText = `${data.erases}/3`;
-
-  const cells = document.querySelectorAll("#sudoku-board button");
-  cells.forEach((btn) => {
-    btn.setAttribute("disabled", "false");
-  });
 }
 
 /**
@@ -179,22 +174,20 @@ function updateBoardVisual(board, fixed = null) {
       const val = board[i][j];
       btn.innerText = val === 0 ? "" : String(val);
 
-      // Actualizar dataset.fixed si viene info de backend
       if (fixed) {
         btn.dataset.fixed = fixed[i][j] ? "1" : "0";
       }
 
-      // Estilos de celdas fijas
       if (btn.dataset.fixed === "1") {
         btn.classList.add("bg-gray-200", "cursor-default");
         btn.classList.remove(
-          "hover:bg-gray-200",
+          "hover:bg-gray-300",
           "cursor-pointer",
           "bg-gray-400"
         );
       } else {
         btn.classList.remove("bg-gray-200", "cursor-default", "bg-gray-400");
-        btn.classList.add("hover:bg-gray-200", "cursor-pointer");
+        btn.classList.add("hover:bg-gray-300", "cursor-pointer");
       }
     }
   }
@@ -202,15 +195,11 @@ function updateBoardVisual(board, fixed = null) {
   updateCellStyles();
 }
 
+/**
+ * Muestra un mensaje de felicitación cuando se completa el Sudoku.
+ *
+ * Esta función se llama automáticamente cuando se completa el Sudoku.
+ */
 function winner() {
   alert("¡Felicidades! Completaste el Sudoku.");
-  const cells = document.querySelectorAll("#sudoku-board button");
-  cells.forEach((btn) => {
-    btn.setAttribute("disabled", "true");
-  });
 }
-
-// Hacer funciones globales para botones HTML
-window.insertNumber = insertNumber;
-window.eraseCell = eraseCell;
-window.resetGame = resetGame;
